@@ -12,7 +12,7 @@ class UserProfileManager(BaseUserManager):
             raise ValueError('User Must have an email address')
 
         #HEre we normailse the mail i.e. make the second half of the email lowercase
-        email = self.normailize_email(email)
+        email = self.normalize_email(email)
         user = self.model(email=email, name=name)
 
         #use django's standard password hashing function
