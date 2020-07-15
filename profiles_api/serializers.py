@@ -47,8 +47,25 @@ class UserProfileSerializer(serializers.ModelSerializer):
             #update method does not interact with it
             password = validated_data.pop('password')
             #hash and set the password for instance
-            print(instance)
             instance.set_password(password)
         
         #call the ModelSerializer update method to handle the rest of the input
         return super().update(instance, validated_data)
+
+
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+    """Serializers profile feed items"""
+
+    class Meta:
+        model = models.ProfileFeedItem
+
+        fields = ('id', 'user_profile', 'status_text', 'create_on')
+
+        #Note that the id field is created by the Django ORM and that the created_on
+        #fie;d is also automatically handled. These fields are therefore by defult set to 'read only'
+        #We also want to make the user_profile field read only and to be automatically set
+        #to the id of the authenticated user
+        extra_kwargs = {
+            'user_profile': {'read_only':True}
+        }
+

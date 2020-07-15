@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+from django.conf import settings
 
 class UserProfileManager(BaseUserManager):
     """Manager for user profiles"""
@@ -67,6 +67,20 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         return "<User: {}>".format(self.email)
 
 
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
 
+    #Note that we could just ref the above UserModel directly for the foreign key
+    #assignment but it is standard to rather reference the auth model specified by
+    #the settings, in case the auth model ever changes.
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+    status_text = models.CharField(max_length=255)
+    create_on = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        """Retrn model as a string"""
+        return "<ProfileFeedItem: {}>".format(self.status_text)
 
